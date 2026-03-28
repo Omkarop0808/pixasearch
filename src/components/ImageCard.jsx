@@ -3,10 +3,9 @@ import { gsap } from 'gsap';
 
 const ImageCard = ({ image, onClick, onImageReady }) => {
   const cardRef = useRef(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isHiResLoaded, setIsHiResLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  // Pre-calculate natural aspect ratio so grid reserves space immediately
   const aspectRatio = (image.webformatWidth && image.webformatHeight) 
     ? image.webformatWidth / image.webformatHeight 
     : image.imageWidth / image.imageHeight;
@@ -43,31 +42,32 @@ const ImageCard = ({ image, onClick, onImageReady }) => {
       role="button"
       aria-label={`View image by ${image.user}`}
     >
-      {/* Tiny Preview image (No Blur) - ensuring users can see the picture regardless of their internet speed */}
+      {/* Preview thumbnail — shown immediately, blurred subtly as a placeholder */}
       <img
         src={image.previewURL}
         alt=""
         onLoad={() => {
-          if (onImageReady && !isLoaded) onImageReady();
+          if (onImageReady && !isHiResLoaded) onImageReady();
         }}
-        className="absolute inset-0 w-full h-full object-cover scale-100 z-0 pointer-events-none"
+        className={`absolute inset-0 w-full h-full object-cover z-0 pointer-events-none transition-opacity duration-500 ${isHiResLoaded ? 'opacity-0' : 'opacity-100'}`}
+        style={{ filter: 'blur(8px)', transform: 'scale(1.05)' }}
         loading="lazy"
       />
 
-      {/* Primary High-Res image (Paints naturally over the top) */}
+      {/* High-resolution image — fades in crisply over the blurred thumbnail */}
       <img
         src={image.webformatURL}
         alt={image.tags}
         onLoad={() => {
-          setIsLoaded(true);
+          setIsHiResLoaded(true);
           if (onImageReady) onImageReady();
         }}
         onError={() => setHasError(true)}
-        className={`absolute inset-0 w-full h-full object-cover scale-100 group-hover:scale-[1.03] transition-transform duration-700 ease-in-out z-10 text-transparent pointer-events-none ${hasError ? 'hidden' : ''}`}
+        className={`absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-all duration-700 ease-in-out z-10 text-transparent pointer-events-none ${isHiResLoaded ? 'opacity-100' : 'opacity-0'} ${hasError ? 'hidden' : ''}`}
         loading="lazy"
       />
       
-      {/* Dynamic hover overlay info */}
+      {/* Dynamic hover overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20" />
       <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-3 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none flex flex-col justify-end z-20">
         <div className="font-semibold text-white truncate drop-shadow-md text-sm sm:text-base">{image.user}</div>

@@ -6,6 +6,15 @@ A beautiful, high-performance image search application powered by the [Pixabay A
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?logo=tailwindcss)
 
+## 📸 Screenshots
+
+| Home Page | Search Results | Image Modal |
+|-----------|----------------|-------------|
+| ![Home Page](images/home-page.png) | ![Search Results](images/search-results.png) | ![Image Modal](images/image-modal.png) |
+
+| Mobile View | Mobile Modal | Intro Animation |
+|-------------|--------------|-----------------|
+| ![Mobile View](images/mobile-view.png) | ![Mobile Modal](images/mobile-modal.png) | ![Intro Animation](images/intro-animation.png) |
 ## ✨ Features
 
 - **Instant Search** — Real-time image search with debounced input
