@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 const ImageCard = ({ image, onClick, onImageReady }) => {
   const cardRef = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   // Pre-calculate natural aspect ratio so grid reserves space immediately
   const aspectRatio = (image.webformatWidth && image.webformatHeight) 
@@ -58,7 +59,8 @@ const ImageCard = ({ image, onClick, onImageReady }) => {
           setIsLoaded(true);
           if (onImageReady) onImageReady();
         }}
-        className="absolute inset-0 w-full h-full object-cover scale-100 group-hover:scale-[1.03] transition-transform duration-700 ease-in-out z-10 text-transparent"
+        onError={() => setHasError(true)}
+        className={`absolute inset-0 w-full h-full object-cover scale-100 group-hover:scale-[1.03] transition-transform duration-700 ease-in-out z-10 text-transparent ${hasError ? 'hidden' : ''}`}
         loading="lazy"
       />
       

@@ -46,7 +46,17 @@ function App() {
           Pixabay ✨
         </h1>
         <SearchBar onSearch={handleSearch} history={history} />
-        {isLoading || (isFetching && page === 1) ? (
+        
+        {!query ? (
+          <div className="mt-32 text-center flex flex-col items-center animate-fade-in px-4 w-full">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600 drop-shadow-sm leading-tight pb-2 inline-block">
+              Discover Inspiration
+            </h2>
+            <p className="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed max-w-2xl text-slate-500">
+              Type anything in the search bar above to explore millions of stunning high-resolution images instantly.
+            </p>
+          </div>
+        ) : isLoading || (isFetching && page === 1) ? (
           <Loader />
         ) : isError ? (
           <ErrorState message={error?.message || error} />
@@ -63,17 +73,8 @@ function App() {
               </button>
             )}
           </>
-        ) : query ? (
-          <EmptyState />
         ) : (
-          <div className="mt-32 text-center flex flex-col items-center animate-fade-in px-4 w-full">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600 drop-shadow-sm leading-tight pb-2 inline-block">
-              Discover Inspiration
-            </h2>
-            <p className="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed max-w-2xl text-slate-500">
-              Type anything in the search bar above to explore millions of stunning high-resolution images instantly.
-            </p>
-          </div>
+          <EmptyState />
         )}
       </div>
       <ImageModal image={modalImage} onClose={handleCloseModal} />
