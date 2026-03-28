@@ -55,11 +55,22 @@ const ImageModal = ({ image, onClose }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <div className="w-full md:w-[65%] p-6 sm:p-10 flex items-center justify-center bg-slate-50 relative">
+        <div className="w-full md:w-[65%] p-6 sm:p-10 flex items-center justify-center bg-slate-50 relative isolate group">
+          {/* Base structural layer: highly reliable, instantly loads the thumbnail upscaled */}
+          <img
+            src={image.previewURL}
+            alt=""
+            className="w-full max-h-[50vh] md:max-h-[75vh] object-contain rounded-2xl shadow-sm absolute z-0"
+          />
+          {/* Heavy HD payload: covers base layer cleanly upon successful download */}
           <img
             src={image.largeImageURL}
             alt={image.tags}
-            className="w-full max-h-[50vh] md:max-h-[75vh] object-contain rounded-2xl shadow-sm relative z-10"
+            onError={(e) => {
+              // Gracefully disappear if the connection to Pixabay's HD CDN times out
+              e.target.style.opacity = '0';
+            }}
+            className="w-full max-h-[50vh] md:max-h-[75vh] object-contain rounded-2xl shadow-sm relative z-10 transition-opacity duration-500 ease-in-out bg-white/5"
           />
         </div>
         <div className="w-full md:w-[35%] p-6 sm:p-10 flex flex-col bg-white overflow-y-auto max-h-[85vh] z-10 border-l border-slate-100">

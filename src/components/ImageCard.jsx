@@ -34,7 +34,7 @@ const ImageCard = ({ image, onClick, onImageReady }) => {
   return (
     <div
       ref={cardRef}
-      className={`relative rounded-2xl shadow-sm cursor-pointer overflow-hidden group w-full border border-slate-100 will-change-transform isolate ${!isLoaded ? 'bg-slate-200 animate-pulse' : 'bg-slate-50'}`}
+      className="relative rounded-2xl shadow-sm cursor-pointer overflow-hidden group w-full border border-slate-100 will-change-transform isolate bg-slate-100"
       style={{ aspectRatio }}
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
@@ -43,15 +43,18 @@ const ImageCard = ({ image, onClick, onImageReady }) => {
       role="button"
       aria-label={`View image by ${image.user}`}
     >
-      {/* Tiny Preview image blurred: loads virtually instantly over bad connections */}
+      {/* Tiny Preview image (No Blur) - ensuring users can see the picture regardless of their internet speed */}
       <img
         src={image.previewURL}
         alt=""
-        className={`absolute inset-0 w-full h-full object-cover scale-100 transition-opacity duration-300 ease-in-out blur-lg z-0 ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
+        onLoad={() => {
+          if (onImageReady && !isLoaded) onImageReady();
+        }}
+        className="absolute inset-0 w-full h-full object-cover scale-100 z-0 pointer-events-none"
         loading="lazy"
       />
 
-      {/* Primary High-Res image (No opacity toggle, so it never gets stuck hidden!) */}
+      {/* Primary High-Res image (Paints naturally over the top) */}
       <img
         src={image.webformatURL}
         alt={image.tags}
@@ -60,7 +63,7 @@ const ImageCard = ({ image, onClick, onImageReady }) => {
           if (onImageReady) onImageReady();
         }}
         onError={() => setHasError(true)}
-        className={`absolute inset-0 w-full h-full object-cover scale-100 group-hover:scale-[1.03] transition-transform duration-700 ease-in-out z-10 text-transparent ${hasError ? 'hidden' : ''}`}
+        className={`absolute inset-0 w-full h-full object-cover scale-100 group-hover:scale-[1.03] transition-transform duration-700 ease-in-out z-10 text-transparent pointer-events-none ${hasError ? 'hidden' : ''}`}
         loading="lazy"
       />
       
